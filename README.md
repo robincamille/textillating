@@ -1,6 +1,6 @@
 # Textillating
 
-This is my little project for NaNoGenMo (National Novel Generation Month) 2018.
+This is my little project for National Novel Generation Month 2018. It is complete (for now).
 
 ## About 
 
@@ -46,7 +46,8 @@ I have included an example of a novel that I found so boring I did not finish it
 
 ## Issues 
 
-The de-tokenizer currently has no idea what to do with quotation marks, so the output looks quite wonky.
+- The NLTK part-of-speech tagger I'm using is not great and mislabels some adjectives.
+- The de-tokenizer currently has no idea what to do with quotation marks, so the output looks quite wonky.
 
 ## See also 
 
