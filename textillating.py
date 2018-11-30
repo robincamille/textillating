@@ -1,97 +1,123 @@
 ﻿# -*- coding: utf-8 -*-
 
-##Make a bland book exciting by upping the sentiment
+##Make a bland book exciting by upping the sentiment! 
 ##
-##POS tag text 
-##Find words in the text that have wordnet synonyms with same sense
-##Find the synonym with the least MOST sentiment (using word lists) 
-##Replace 
-##Tack on word ending 
+##Run this on the command line like so:
+##python textillating.py [filename you want to use.txt]
+##Must be plain text .txt file for now
+##Output will be extremely_[filename].txt
 
+import sys
 from random import randint
 from nltk.corpus import wordnet as wn
 from nltk import word_tokenize as tok
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from nltk import pos_tag as pos
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from wordfilter import Wordfilter 
+
+#Sometimes wordnet is inappropriate and not in a funny way
+wf = Wordfilter() #https://github.com/dariusk/wordfilter
+ignore = ['other','several','own','queer','fucking','first','second','third','next']
 
 detok = TreebankWordDetokenizer()
 sid = SentimentIntensityAnalyzer()
 
-#text = "Mr. Pocket being justly celebrated. He gave most excellent practical advice, and for having a clear and sound perception of things and a highly judicious mind, I had some notion in my heart-ache of begging him to accept my confidence. But happening to look up at Mrs. Pocket as she sat reading her book of dignities after prescribing Bed as a sovereign remedy for baby, I thought—Well—No, I wouldn't. "
-#text = "I am good, excellent, holy, although I feel bad, terrible, evil."
+def main():
+    """Amplifies the affect of a given text. Adverbs and adjectives are altered."""
 
-filename = open('house_of_the_seven_gables.txt','r')
-text = filename.read()
-filename.close()
-
-outfile = open('house_of_the_seven_gables_xtreme.txt','w')
-
-
-
-text = pos(tok(text)) #('excellent', 'JJ') 
-
-#print(text)
-new_text = []
-
-negatives = ['not','never','no']
-modifiers = ['ABSOLUTELY','ACTUALLY','ACUTELY','ADMITTEDLY','AMPLY',\
-'as a MATTER of FACT','ASSUREDLY','ASTONISHINGLY','AUTHENTICALLY',\
-'AWFULLY','BEYOND DOUBT','CATEGORICALLY','CERTAINLY','CONSIDERABLY',\
-'DE FACTO','DEARLY','DECIDEDLY','DEEPLY','EASILY','EMINENTLY','EMPHATICALLY',\
-'EXAGGERATEDLY','EXCEEDINGLY','EXCESSIVELY','EXTENSIVELY','EXTRAORDINARILY',\
-'EXTREMELY','FOR REAL','GENUINELY','GREATLY','HIGHLY','HONESTLY','in ACTUALITY',\
-'in EFFECT','in FACT','in POINT of FACT','in REALITY','INCREDIBLY','INDEED',\
-'INDISPENSABLY','INDUBITABLY','LARGELY','LEGITIMATELY','LITERALLY','NOTABLY',\
-'NOTHING ELSE but','NOTICEABLY','PARTICULARLY','POSITIVELY','POWERFULLY',\
-'PRECISELY','PRESSINGLY','PRODIGIOUSLY','PROFOUNDLY','REMARKABLY',\
-'SUBSTANTIALLY','SUPER','ACUTELY','EXCEPTIONALLY','HUGELY','IMMENSELY',\
-'INORDINATELY','INTENSELY','OVERLY','QUITE','SEVERELY','STRIKINGLY','TERRIBLY',\
-'TERRIFICALLY','TOO','TOTALLY','UNCOMMONLY','UNDULY','UNUSUALLY','UTTERLY',\
-'VERY','ALMIGHTY','DRASTICALLY','EXORBITANTLY','IMMODERATELY','MARKEDLY',\
-'PLENTY','POWERFUL','PROHIBITIVELY','RADICALLY','RARELY','SURPASSINGLY',\
-'WAY','ULTRA','VIOLENTLY','VITALLY','SUPERLATIVELY','SURELY','SURPRISINGLY',\
-'TRULY','UNDOUBTEDLY','UNMISTAKABLY','UNQUESTIONABLY','VASTLY','VERILY',\
-'WELL','WONDERFULLY']
-
-for word in text:
-    word_score = sid.polarity_scores(word[0])['compound']
-    use_synonym = word[0] #updates later
-    possible_synonyms = []
-    if word[0] in negatives:
-        use_synonym = word[0].upper()
-    elif word[1] == 'JJ':
-        for syn in wn.synsets(word[0]):
-            for lemma in syn.lemmas():
-                syn_meta = str(syn).split('.') #match part of speech
-                if syn_meta[1] == 'a' or 's': #adjectives
-                    possible_synonyms.append(lemma.name())
-        all_synonyms = set(possible_synonyms) #de-dupe
-        for synonym in all_synonyms:
-            syn_score = sid.polarity_scores(synonym)['compound']
-            if word_score == 0:
-                use_synonym = modifiers[randint(0,len(modifiers)-1)] + ' ' + word[0].upper() #VERY neutral
-            elif word_score > 0:
-                if syn_score > sid.polarity_scores(use_synonym)['compound']:
-                    use_synonym = synonym.upper() #choose most xtreme synonym (positive)
-            elif word_score < 0:
-                if syn_score < sid.polarity_scores(use_synonym)['compound']:
-                    use_synonym = synonym.upper() #choose most xtreme synonym (negative)
-    elif word[0] == '.':
-        use_synonym = '!'
-    elif word[0] == '!':
-        use_synonym = '!!!!!!!!!!!!!'
-    elif word[0] == '?':
-        use_synonym = '??!!'
+    if len(sys.argv) == 2:
+        f = sys.argv[1]
+        if f[len(f)-4:] == '.txt':
+            usefile = f #must be a .txt file
+        else:
+            usefile = 'great_expectations.txt'
+            print("This script requires .txt files only. The file you\n\
+            specified was not a .txt file. Instead, we'll use\n\
+            Great Expectations as an example...")
     else:
-        use_synonym = word[0]
-    new_text.append(use_synonym)
+        usefile = 'great_expectations.txt'
+        print("You can define which .txt file to use like so: \n\
+        python textillating.py [filename you want to use.txt]\n\
+        You didn't specify a .txt file to use, so in the meantime,\n\
+        we'll use Great Expectations as an example...")
+    
+    print('Processing... This may take a minute...')
 
-#print(detok.detokenize(new_text))
+    filename = open(usefile,'r')
+    text = filename.readlines() #readlines in order to preserve line breaks
+    filename.close()
 
+    outfile = open('extremely_' + usefile,'w')
 
-outfile.write(detok.detokenize(new_text))
+    raw_text = []
+    new_text = []
 
-outfile.close()
+    for line in text:   
+        line = pos(tok(line)) #('excellent', 'JJ') 
+        raw_text.append(line)
+    
+    modifiers = ['WAY','ABSOLUTELY','ACTUALLY','ACUTELY','ALMIGHTY','AMPLY',
+    'ASSUREDLY','ASTONISHINGLY','AWFULLY','CATEGORICALLY','CERTAINLY',
+    'CLEARLY','CONSIDERABLY','DECIDEDLY','DEEPLY','DRASTICALLY',
+    'EMINENTLY','EMPHATICALLY','EXAGGERATEDLY','EXCEEDINGLY','EXCEPTIONALLY',
+    'EXCESSIVELY','EXORBITANTLY','EXPLICITLY','EXTENSIVELY','EXTRAORDINARILY',
+    'EXTREMELY','FOR REAL','GENUINELY','GREATLY','HIGHLY','HUGELY','IMMENSELY',
+    'IMMODERATELY','INCREDIBLY','INDUBITABLY','INORDINATELY',
+    'INTENSELY','LARGELY','LEGITIMATELY','LITERALLY','MARKEDLY','NOTABLY',
+    'NOTICEABLY','OBVIOUSLY','OVERLY','PARTICULARLY','PLENTY','POSITIVELY',
+    'POWERFULLY','PRODIGIOUSLY','PROFOUNDLY','PROHIBITIVELY',
+    'QUITE','RADICALLY','REALLY','REAL','REMARKABLY','SEVERELY',
+    'STRIKINGLY','SUBSTANTIALLY','SUPER','SUPERLATIVELY','SURPASSINGLY',
+    'SURPRISINGLY','TERRIBLY','TERRIFICALLY','TOO','TOTALLY','TRULY','ULTRA','UNCOMMONLY',
+    'UNDENIABLY','UNDOUBTEDLY','UNEQUIVOCALLY','UNMISTAKABLY','UNQUESTIONABLY',
+    'UTTERLY','VASTLY','VERILY','VERY','VIOLENTLY','VITALLY','WONDERFULLY']
 
-print('All done')
+    for line in raw_text: #goes line by line to preserve line breaks
+        for word in line:
+            word_score = sid.polarity_scores(word[0])['compound']
+            use_synonym = word[0] #updates later
+            possible_synonyms = []
+            if wf.blacklisted(word[0]):
+                pass
+            elif word[0].lower() in ignore:
+                pass
+            elif word[1] == 'JJ': #adjectives only; adverbs don't quite work well here
+                for syn in wn.synsets(word[0]):
+                    for lemma in syn.lemmas():
+                        syn_meta = str(syn).split('.') #match part of speech
+                        if syn_meta[1] == 'a' or 's': #adjectives
+                            possible_synonyms.append(lemma.name())
+                all_synonyms = set(possible_synonyms) #de-dupe
+                for synonym in all_synonyms:
+                    syn_score = sid.polarity_scores(synonym)['compound'] 
+                        #scores range from -1 to 1, 1 being positive affect
+                    if wf.blacklisted(synonym):
+                        pass 
+                    elif word_score == 0:
+                        use_synonym = modifiers[randint(0,len(modifiers)-1)] + ' ' + word[0].upper() #VERY neutral
+                    elif word_score > 0:
+                        if syn_score > sid.polarity_scores(use_synonym)['compound']:
+                            use_synonym = synonym.upper() #choose most xtreme synonym (positive)
+                    elif word_score < 0:
+                        if syn_score < sid.polarity_scores(use_synonym)['compound']:
+                            use_synonym = synonym.upper() #choose most xtreme synonym (negative)
+            elif word[0] == '.':
+                use_synonym = '!'
+            elif word[0] == '!':
+                use_synonym = '!!!!!!!!!!!!!'
+            elif word[0] == '?':
+                use_synonym = '??!!'
+            else:
+                use_synonym = word[0]
+            new_text.append(use_synonym)
+        new_text.append('\n') #preserve line breaks
+
+    outfile.write(detok.detokenize(new_text))
+    #Does not deal with quotation marks well. Adds a space before/after them
+
+    outfile.close()
+
+    print('All done! See extremely_' + usefile + ' for your newly exciting text.')
+
+main()
