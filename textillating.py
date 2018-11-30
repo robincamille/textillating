@@ -18,7 +18,7 @@ from wordfilter import Wordfilter
 
 #Sometimes wordnet is inappropriate and not in a funny way
 wf = Wordfilter() #https://github.com/dariusk/wordfilter
-ignore = ['other','several','own','queer','fucking','first','second','third','next','same','few','such']
+ignore = ['other','several','own','next','same','few','such','past','queer','fucking','one','first','two','second','three','third','four','fourth','five','fifth','six','sixth','seven','seventh','eight','eighth','nine','ninth','ten','tenth','eleven','eleventh','twelve','twelfth','thirteen','thirteenth','fourteen','fourteenth','fifteen','fifteenth','sixteen','sixteenth','seventeen','seventeenth','eighteen','eighteenth','nineteen','nineteenth','twenty','twentieth']
 
 detok = TreebankWordDetokenizer()
 sid = SentimentIntensityAnalyzer()
