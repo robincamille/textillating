@@ -1,10 +1,12 @@
 # Textillating
 
+This is my little project for NaNoGenMo (National Novel Generation Month) 2018.
+
 ## About 
 
 Ever wished the novel you were reading was way more exciting? Try Textillating it! 
 
-This is my little project for NaNoGenMo 2018 (National Novel Generation Month). The user inputs a .txt file (like a novel), and the script outputs a modified version of the file wherein all adjectives have been replaced their most extreme synonyms. In other words, the affect has been amped up. Some simple punctuation changes are also implemented.
+The user inputs a .txt file (like a novel), and the script outputs a modified version of the file wherein most adjectives have been replaced by their most extreme synonyms. In other words, the affect has been amped up. Some simple punctuation changes are also implemented.
 
 For example, here's a paragraph from *Great Expectations*, as it is originally written:
 
@@ -14,7 +16,7 @@ And here's the same paragraph after being run through textillating.py:
 
 > "Yes; but my LOVE Handel," Herbert went on, as if we had been talking, instead of silent, "its having been so strongly rooted in the breast of a boy whom nature and circumstances made so ROMANTICIST, renders it very DANGEROUS! Think of her bringing-up, and think of Miss Havisham! Think of what she is herself (now I am EMINENTLY REPULSIVE and you abominate me)! This may lead to PATHETIC things!" "I know it, Herbert," said I, with my head still turned away, "but I can't help it!" "You can't detach yourself??!!" "No! SEVERELY IMPOSSIBLE!!!!!!!!!!!!!" "You can't try, Handel??!!" "No! ASTONISHINGLY IMPOSSIBLE!!!!!!!!!!!!!"
 
-This project uses the VADER sentiment analysis tools and WordNet from NLTK (Natural Language Tool Kit) for the synonym replacement feature. The SentimentIntensityAnalyzer quantifies how affective a word (or sentence) is, and WordNet finds a replacement. Here's what those scores look like:
+This project uses the [VADER sentiment analysis](http://www.nltk.org/howto/sentiment.html) tools and [WordNet](http://www.nltk.org/howto/wordnet.html) from NLTK (Natural Language Tool Kit). The SentimentIntensityAnalyzer quantifies how affective a word (or sentence) is, and WordNet finds a replacement. Here's what those scores look like:
 
 Word | Sentiment polarity score 
 --- | ---
@@ -39,3 +41,12 @@ You'll need to `pip install nltk` and `pip install wordfilter` if you don't alre
 Textillating needs a plain text .txt file. You can find lots of boring classic novels on [Project Gutenberg](http://www.gutenberg.org).
 
 I have included an example of a novel that I found so boring I did not finish it. (Sorry, 10th grade English teacher!) If there's a filename issue, it will use *Great Expectations* instead. 
+
+## Issues 
+
+The de-tokenizer currently has no idea what to do with quotation marks, so the output looks quite wonky.
+
+## See also 
+
+I became interested in this in the course of working on my [Nondescript project](https://github.com/robincamille/nondescript), which guides a user in changing their writing "style" is it is computed by stylometric analyses. The 2010 paper "[Automatic Synonym and Phrase Replacement Show Promise for Style Transformation](https://ieeexplore.ieee.org/document/5708976)" (Khosmood and Levinson) used WordNet and ranked possible synonyms by statistical popularity. It got me thinking about other ways to rank synonyms, like by affect! 
+
