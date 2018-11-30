@@ -95,13 +95,17 @@ def main():
                     if wf.blacklisted(synonym):
                         pass 
                     elif word_score == 0:
-                        use_synonym = modifiers[randint(0,len(modifiers)-1)] + ' ' + word[0].upper() #VERY neutral
+                        if abs(syn_score) > sid.polarity_scores(use_synonym)['compound']:
+                            use_synonym = synonym #choose most xtreme synonym (either pos or neg)
                     elif word_score > 0:
                         if syn_score > sid.polarity_scores(use_synonym)['compound']:
-                            use_synonym = synonym.upper() #choose most xtreme synonym (positive)
+                            use_synonym = synonym #choose most xtreme synonym (positive)
                     elif word_score < 0:
                         if syn_score < sid.polarity_scores(use_synonym)['compound']:
-                            use_synonym = synonym.upper() #choose most xtreme synonym (negative)
+                            use_synonym = synonym #choose most xtreme synonym (negative)
+                if use_synonym == word[0]:
+                    use_synonym = modifiers[randint(0,len(modifiers)-1)] + ' ' + word[0] #VERY neutral
+                use_synonym = use_synonym.replace("_"," ").upper()
             elif word[0] == '.':
                 use_synonym = '!'
             elif word[0] == '!':
