@@ -6,7 +6,7 @@ This is my little project for NaNoGenMo (National Novel Generation Month) 2018.
 
 Ever wished the novel you were reading was way more exciting? Try Textillating it! 
 
-The user inputs a .txt file (like a novel), and the script outputs a modified version of the file wherein most adjectives have been replaced by their most extreme synonyms. In other words, the affect has been amped up. Some simple punctuation changes are also implemented.
+The user inputs a .txt file (like a novel), and the script outputs a modified version of the file wherein most adjectives have been replaced by their most extreme synonyms. In other words, the affect has been amped up. 
 
 For example, here's a paragraph from *Great Expectations*, as it is originally written:
 
@@ -28,7 +28,9 @@ abhorrent | -0.6249
 
 When Textillating encounters an adjective, it finds its sentiment polarity score, then checks for any synonyms from WordNet that have more extreme scores. So *fine* might be replaced by *awesome*, and *terrible* might be replaced by *abhorrent*. 
 
-If there the sentiment polarity score is 0, the adjective is modified by an additional adverb, for instance: *necessary* might be replaced by *intensely necessary.* 
+If there the sentiment polarity score is 0, or if there are no viable synonyms, the adjective is modified by an additional adverb, for instance: *necessary* might be replaced by *intensely necessary.* 
+
+All replaced words are output in all caps. Some simple punctuation changes are also implemented.
 
 ## How to use
 
