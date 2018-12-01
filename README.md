@@ -28,7 +28,7 @@ abhorrent | -0.6249
 
 When Textillating encounters an adjective, it finds its sentiment polarity score, then checks for any synonyms from WordNet that have more extreme scores. So *fine* might be replaced by *awesome*, and *terrible* might be replaced by *abhorrent*. 
 
-If there the sentiment polarity score is 0, or if there are no viable synonyms, the adjective is modified by an additional adverb, for instance: *necessary* might be replaced by *intensely necessary.* 
+If the adjective's sentiment polarity score is 0, or if there are no viable synonyms, the adjective is modified by an additional adverb. For instance: *necessary* might be replaced by *intensely necessary.* 
 
 All replaced words are output in all caps. Some simple punctuation changes are also implemented.
 
